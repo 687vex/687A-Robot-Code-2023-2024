@@ -1,5 +1,29 @@
 #include "main.h"
+#include <iostream>
+#include <ostream>
+#include <cmath>
 #include "pros/misc.h"
+
+//pros::Motor right_mtr1(3);
+//pros::Motor right_mtr2(4);
+//pros::Motor right_mtr3(5);
+
+//pros::Motor left_mtr1(8);
+//pros::Motor left_mtr2(9);
+//pros::Motor left_mtr3(10);
+
+//pros::Motor_Group motor_leftsidegroup ({left_mtr1, left_mtr2, left_mtr3});
+//pros::Motor_Group motor_rightsidegroup ({right_mtr1, right_mtr2, right_mtr3});
+/*
+void extendWings(){
+	pros::ADIDigitalOut piston (sd;alfkj);
+
+}
+
+void startDrive(int i) {
+	motor_leftsidegroup.move_voltage(12000);
+	motor_rightsidegroup.move_voltage(12000);
+	pros::delay(i);
 
 /**
  * A callback function for LLEMU's center button.
@@ -67,6 +91,8 @@ void autonomous() {
 	pros::Motor wings1(2,true);
 	pros::Motor wings2(3,true);
 
+	//startDrive(5);
+
 
 }
 
@@ -93,6 +119,7 @@ void opcontrol() {
 	pros::Motor launcher(1,	false);
 	pros::Motor wings1(2, true);
 	pros::Motor wings2(3,false);
+	pros::Motor intake(14, false);
 
 
 	while (true) {
