@@ -16,7 +16,7 @@ pros::Motor_Group motor_leftsidegroup ({left_mtr1, left_mtr2, left_mtr3});
 pros::Motor_Group motor_rightsidegroup ({right_mtr1, right_mtr2, right_mtr3});
 
 void extendWings(bool state){
-	pros::ADIDigitalOut pistonLeft (a, state);
+	pros::ADIDigitalOut pistonLeft (11, state);
 	pros::ADIDigitalOut pistonRight (12, state);
 	pistonLeft.set_value(state);
 	pistonRight.set_value(state);
@@ -52,7 +52,7 @@ void on_center_button() {
  */
 void initialize() {
 	pros::lcd::initialize();
-	pros::lcd::set_text(1, "PENIS PENIS PENIS");
+	pros::lcd::set_text(1, "HELLO!");
 
 	pros::lcd::register_btn1_cb(on_center_button);
 }
@@ -178,3 +178,4 @@ void opcontrol() {
 		pros::delay(20);
 	}
 }
+
