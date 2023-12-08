@@ -4,19 +4,29 @@
 #include <cmath>
 #include "pros/misc.h"
 
-//pros::Motor right_mtr1(3);
-//pros::Motor right_mtr2(4);
-//pros::Motor right_mtr3(5);
+pros::Motor right_mtr1(1);
+pros::Motor right_mtr2(2);
+pros::Motor right_mtr3(3);
 
-//pros::Motor left_mtr1(8);
-//pros::Motor left_mtr2(9);
-//pros::Motor left_mtr3(10);
+pros::Motor left_mtr1(8);
+pros::Motor left_mtr2(9);
+pros::Motor left_mtr3(10);
 
-//pros::Motor_Group motor_leftsidegroup ({left_mtr1, left_mtr2, left_mtr3});
-//pros::Motor_Group motor_rightsidegroup ({right_mtr1, right_mtr2, right_mtr3});
-/*
-void extendWings(){
-	pros::ADIDigitalOut piston (sd;alfkj);
+pros::Motor_Group motor_leftsidegroup ({left_mtr1, left_mtr2, left_mtr3});
+pros::Motor_Group motor_rightsidegroup ({right_mtr1, right_mtr2, right_mtr3});
+
+void extendWings(bool state){
+	pros::ADIDigitalOut pistonLeft (a, state);
+	pros::ADIDigitalOut pistonRight (12, state);
+	pistonLeft.set_value(state);
+	pistonRight.set_value(state);
+
+}
+void retractWings(bool state){
+	pros::ADIDigitalOut pistonLeft (11, state);
+	pros::ADIDigitalOut pistonRight (12, state);
+	pistonRight.set_value(state);
+	pistonLeft.set_value(state);
 
 }
 
@@ -24,21 +34,14 @@ void startDrive(int i) {
 	motor_leftsidegroup.move_voltage(12000);
 	motor_rightsidegroup.move_voltage(12000);
 	pros::delay(i);
-
-/**
+}
+/*
  * A callback function for LLEMU's center button.
  *
  * When this callback is fired, it will toggle line 2 of the LCD text between
  * "I was pressed!" and nothing.
  */
 void on_center_button() {
-	static bool pressed = false;
-	pressed = !pressed;
-	if (pressed) {
-		pros::lcd::set_text(2, "I was pressed!");
-	} else {
-		pros::lcd::clear_line(2);
-	}
 }
 
 /**
@@ -49,7 +52,7 @@ void on_center_button() {
  */
 void initialize() {
 	pros::lcd::initialize();
-	pros::lcd::set_text(1, "Good luck, have fun!");
+	pros::lcd::set_text(1, "PENIS PENIS PENIS");
 
 	pros::lcd::register_btn1_cb(on_center_button);
 }
@@ -84,14 +87,14 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	pros::Motor left_mtr1(11,true);
-	pros::Motor left_mtr2(22,true);
-	pros::Motor right_mtr1(19,true);
-	pros::Motor right_mtr2(20,true);
-	pros::Motor wings1(2,true);
-	pros::Motor wings2(3,true);
+	// pros::Motor left_mtr1(11,true);
+	// pros::Motor left_mtr2(22,true);
+	// pros::Motor right_mtr1(19,true);
+	// pros::Motor right_mtr2(20,true);
+	// pros::Motor wings1(2,true);
+	// pros::Motor wings2(3,true);
 
-	//startDrive(5);
+	startDrive(5);
 
 
 }
@@ -111,79 +114,66 @@ void autonomous() {
  */
 void opcontrol() {
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
-	pros::Motor left_mtr1(11,true);
-	pros::Motor left_mtr2(12,true);
-	pros::Motor right_mtr1(19,false);
-	pros::Motor right_mtr2(20,false);
+	//pros::Motor left_mtr1(1,true);
+	//pros::Motor left_mtr2(2,false);
+	//pros::Motor left_mtr3(3,true);
+	//pros::Motor right_mtr1(8,false);
+	//pros::Motor right_mtr2(9,true);
+	//pros::Motor right_mtr3(10,false);
 	pros::Motor flystick(4,false);
-	pros::Motor launcher(1,	false);
-	pros::Motor wings1(2, true);
-	pros::Motor wings2(3,false);
-	pros::Motor intake(14, false);
+	pros::Motor intake(5, false);
 
 
 	while (true) {
-		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
-		                 (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
-		                 (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);
 		int left = master.get_analog(ANALOG_LEFT_Y); //joystick
 		int right = master.get_analog(ANALOG_RIGHT_Y); //joystick
 
-		//wings1
+		//intake
 		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-			wings1.move(100);
+			intake.move(100);
 		} else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_L2)){
-			wings1.move(-100);
+			intake.move(-100);
 		} else {
-			wings1.brake();
-		}
-
-		//wings2
-		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-			wings2.move(100);
-		} else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
-			wings2.move(-100);
-		} else {
-			wings2.brake();
+			intake.brake();
 		}
 
 		//FLYWHEEL
 		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
-			launcher.move(128);
+			flystick.move(128);
 		} else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_Y)) {
-			launcher.move(100);
-		} else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
-			launcher.move(80);
-		} else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {
-			launcher.move(60);
-		} else {
-			launcher.brake();
-		}
-
-
-		//flystick
-		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_DOWN)) {
 			flystick.move(100);
-		} else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
-			flystick.move(-100);
+		} else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_B)) {
+			flystick.move(80);
+		} else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {
+			flystick.move(60);
 		} else {
 			flystick.brake();
 		}
-		
+
+		//wings
+		if(master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
+			extendWings(true);
+		} else if (master.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
+			retractWings(false);
+		}
 
 		if(left < 10 && left > -10){
 			left = 0;
 		}
 
-		left_mtr1.move(left);
-		left_mtr2.move(left);
-
+		motor_leftsidegroup.move(left);
+		//left_mtr1.move(left);
+		//left_mtr2.move(left);
+		//left_mtr3.move(left);
 
 		if(right < 10 && right > -10){
 			right = 0;
 		}
-		right_mtr1.move(right);
-		right_mtr2.move(right);
+
+		motor_rightsidegroup.move(right);
+		//right_mtr1.move(right);
+		//right_mtr2.move(right);
+		//right_mtr3.move(right);
 
 		pros::delay(20);
 	}
